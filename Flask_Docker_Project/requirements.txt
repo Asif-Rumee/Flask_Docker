@@ -1,0 +1,5 @@
+flask
+wtforms
+wtforms.validators
+mysql.connector
+flask_fontawesome 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
+    <title>Locations</title>
+    <script type="text/javascript" src="static/js/jquery-latest.js"></script>
+    <script type="text/javascript" src="static/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="static/js/rating.min.js"></script>
+    {{ fontawesome_css() }}
+</head>
+<body>
+   <div class="row justify-content-center">
+        <form method="POST">
+            <ul class="list-inline" style="width:max-content; border: .5px solid; border-radius: .5rem;">
+                <li class="list-inline-item ml-sm-4"><i class="fas fa-bars"></i></li>
+                <li class="list-inline-item"><input type="text" id="autocomplete" name="search_box" style="border: none;"></li>
+                <li class="list-inline-item"><button type="submit" class="btn btn-link"><i class="fas fa-search"></i></button></li>
+                <li class="list-inline-item"><button type="button" class="btn btn-link" id="btn-locations"><i class="fas fa-audio-description"></i></button></li>
+            </ul>
+        </form>
+    </div>
+
+   <div class="row justify-content-center">
+        <div class="card card-item">
+            <img class="card-img-top" src="static/images/tiger.jfif">
+
+            <div class="card-body">
+                <div class="card-title">
+                    <h5>{{ res[1] }}</h5>
+                </div>
+                <div class="card-text">
+                    {{ res[2] }}
+                </div>
+                <div class="card-text">
+                    Latitude: {{ res[3] }}
+                </div>
+                <div class="card-text">
+                    Longitude: {{ res[4] }}
+                </div>
+                <div>
+                    <span class="fas fa-star checked"></span>
+                    <span class="fas fa-star checked"></span>
+                    <span class="fas fa-star checked"></span>
+                    <span class="fas fa-star checked"></span>
+                    <span class="fas fa-star"></span>
+                    <span>({{ res[8]}})</span>
+                </div>
+                <div class="card-text">
+                    {{ res[5] }}
+                </div>
+                <div class="card-text">
+                    {{ res[6]}}
+                </div>
+                <div class="card-text">
+                    {{ res[7]}}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+  
+
+   {{ fontawesome_js() }}
+</body>
+
+<script>
+   $(function () {
+        $.ajax({
+            url: '{{ url_for("place") }}'
+        }).done(function (data) {
+            $('#autocomplete').autocomplete({
+                source: data.json,
+                minLength: 1,
+            });
+        });
+    });
+
+    $(function(){
+        $('#btn-locations').click(function(){
+            let res = document.querySelector('#ui-id-1').querySelectorAll('.ui-menu-item');
+            let locations = [];
+            for(let i = 0; i<res.length; i++){
+                locations.push(res[i].textContent);
+            }
+
+            $.ajax({
+                url: 'http://localhost:5000',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({'locations': locations}),
+                success: function(response){
+                    document.write(response);
+                }
+            });
+        });
+    });
+</script>
+
+</html>
